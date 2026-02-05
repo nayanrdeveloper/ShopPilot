@@ -7,10 +7,16 @@ interface User {
     name: string;
 }
 
+interface StoreData {
+    id: string;
+    slug: string;
+}
+
 interface AuthState {
     token: string | null;
     user: User | null;
-    login: (token: string, user: User) => void;
+    store: StoreData | null;
+    login: (token: string, user: User, store: StoreData) => void;
     logout: () => void;
 }
 
@@ -19,8 +25,9 @@ export const useAuthStore = create<AuthState>()(
         (set) => ({
             token: null,
             user: null,
-            login: (token, user) => set({ token, user }),
-            logout: () => set({ token: null, user: null }),
+            store: null,
+            login: (token, user, store) => set({ token, user, store }),
+            logout: () => set({ token: null, user: null, store: null }),
         }),
         {
             name: 'shop-pilot-auth',
