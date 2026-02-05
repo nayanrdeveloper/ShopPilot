@@ -7,14 +7,15 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
 import { typeDefs } from './schema/typeDefs';
-import { resolvers as productResolvers } from './resolvers/product.resolver';
+import { productResolvers } from './resolvers/product.resolver';
 import { storeResolvers } from './resolvers/store.resolver';
 import { aiResolvers } from './resolvers/ai.resolver';
+import { authResolvers } from './resolvers/auth.resolver';
 
 // Merge resolvers
 const resolvers = {
   Query: { ...productResolvers.Query, ...storeResolvers.Query },
-  Mutation: { ...productResolvers.Mutation, ...storeResolvers.Mutation, ...aiResolvers.Mutation },
+  Mutation: { ...productResolvers.Mutation, ...storeResolvers.Mutation, ...aiResolvers.Mutation, ...authResolvers.Mutation },
   Store: storeResolvers.Store,
 };
 

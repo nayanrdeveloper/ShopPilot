@@ -29,6 +29,19 @@ export const typeDefs = `#graphql
     product(id: ID!): Product
   }
 
+  type AuthPayload {
+    token: String!
+    user: User!
+    store: Store!
+  }
+
+  type User {
+    id: ID!
+    email: String!
+    name: String!
+    role: String!
+  }
+
   type Mutation {
     createStore(name: String!, slug: String!): Store!
     createProduct(name: String!, price: Float!, sku: String!, storeId: String!, stock: Int, description: String, imageUrl: String): Product!
@@ -36,6 +49,9 @@ export const typeDefs = `#graphql
     generateDescription(name: String!, category: String!): String!
     createOrder(storeId: ID!, items: [OrderItemInput!]!): Order!
     generateSalesSummary(storeId: ID!): String!
+    
+    register(email: String!, password: String!, name: String!, storeName: String!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
   }
 
   input OrderItemInput {

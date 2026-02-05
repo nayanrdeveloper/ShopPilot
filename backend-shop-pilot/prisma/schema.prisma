@@ -16,8 +16,22 @@ model Store {
   name      String
   slug      String    @unique
   products  Product[]
+  users     User[]
+  orders    Order[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("OWNER") // OWNER, STAFF
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
@@ -39,6 +53,7 @@ model Product {
 model Order {
   id        String      @id @default(uuid())
   storeId   String
+  store     Store       @relation(fields: [storeId], references: [id])
   total     Float
   status    String      @default("COMPLETED")
   items     OrderItem[]

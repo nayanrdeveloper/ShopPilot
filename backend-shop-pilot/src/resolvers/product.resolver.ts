@@ -1,6 +1,6 @@
 import { ProductService } from '../services/product.service';
 
-export const resolvers = {
+export const productResolvers = {
   Query: {
     hello: () => 'Hello Shop Pilot!',
     products: async (_: any, { skip, take }: { skip?: number; take?: number }) => {
