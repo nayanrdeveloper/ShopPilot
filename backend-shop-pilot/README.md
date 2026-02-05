@@ -313,3 +313,49 @@ mutation {
 }
 ```
 
+### 7. Image Upload (Cloudinary) ☁️
+
+Store Pilot uses **Signed Client-Side Uploads** for performance and security.
+
+1. **Frontend asks Backend for a Signature.**
+2. **Frontend uploads file directly to Cloudinary.**
+3. **Frontend sends the resulting URL to Backend** (e.g., in `createProduct` or `updateStore`).
+
+#### **1. Get Upload Signature**
+**Query:**
+```graphql
+query {
+  getUploadSignature {
+    signature
+    timestamp
+    apiKey
+    cloudName
+  }
+}
+```
+
+#### **2. Upload to Cloudinary (Frontend Example)**
+```javascript
+const uploadImage = async (file) => {
+  // 1. Get Signature
+  const { data } = await apolloClient.query({ query: GET_UPLOAD_SIGNATURE });
+  const { signature, timestamp, apiKey, cloudName } = data.getUploadSignature;
+
+  // 2. Upload to Cloudinary
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('api_key', apiKey);
+  formData.append('timestamp', timestamp);
+  formData.append('signature', signature);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  const uploadData = await res.json();
+  return uploadData.secure_url;
+};
+```
+
+

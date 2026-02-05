@@ -34,6 +34,14 @@ export const typeDefs = `#graphql
     me: User
     orders(storeId: ID!, skip: Int, take: Int): [Order!]!
     dashboardStats(storeId: ID!): DashboardStats!
+    getUploadSignature: CloudinarySignature!
+  }
+
+  type CloudinarySignature {
+    signature: String!
+    timestamp: Int!
+    cloudName: String!
+    apiKey: String!
   }
 
   type AuthPayload {

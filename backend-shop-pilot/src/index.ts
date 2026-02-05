@@ -9,6 +9,7 @@ import { storeResolvers } from './resolvers/store.resolver';
 import { aiResolvers } from './resolvers/ai.resolver';
 import { authResolvers } from './resolvers/auth.resolver';
 import { orderResolvers } from './resolvers/order.resolver';
+import { cloudinaryResolvers } from './resolvers/cloudinary.resolver';
 import { context, Context } from './context';
 
 // Merge resolvers
@@ -18,6 +19,7 @@ const resolvers = {
     ...storeResolvers.Query,
     ...authResolvers.Query,
     ...orderResolvers.Query,
+    ...cloudinaryResolvers.Query,
   },
   Mutation: {
     ...productResolvers.Mutation,
