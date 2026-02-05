@@ -18,6 +18,9 @@ export const storeResolvers = {
     createStore: async (_: any, { name, slug }: { name: string; slug: string }) => {
       return await StoreService.create(name, slug);
     },
+    updateStore: async (_: any, { id, input }: { id: string; input: any }) => {
+      return await StoreService.update(id, input);
+    },
   },
   // Field Resolver for Store
   Store: {

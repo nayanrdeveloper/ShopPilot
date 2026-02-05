@@ -3,6 +3,10 @@ export const typeDefs = `#graphql
     id: ID!
     name: String!
     slug: String!
+    about: String
+    template: String
+    heroImage: String
+    primaryColor: String
     products: [Product!]
     createdAt: String!
   }
@@ -55,6 +59,17 @@ export const typeDefs = `#graphql
     
     register(email: String!, password: String!, name: String!, storeName: String!): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
+
+    updateStore(id: ID!, input: UpdateStoreInput!): Store!
+  }
+
+  input UpdateStoreInput {
+    name: String
+    slug: String
+    about: String
+    template: String
+    heroImage: String
+    primaryColor: String
   }
 
   input OrderItemInput {

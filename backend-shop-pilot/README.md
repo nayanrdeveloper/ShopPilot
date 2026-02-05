@@ -101,10 +101,33 @@ mutation {
 query {
   store(slug: "tech-shop") {
     name
+    about
+    template
+    primaryColor
+    heroImage
     products {
       name
       price
     }
+  }
+}
+```
+
+#### **Update Store Details**
+**Mutation:**
+```graphql
+mutation {
+  updateStore(
+    id: "STORE_UUID", 
+    input: {
+      about: "We sell the best tech gadgets.",
+      template: "modern",
+      primaryColor: "#0070f3"
+    }
+  ) {
+    name
+    about
+    template
   }
 }
 ```
