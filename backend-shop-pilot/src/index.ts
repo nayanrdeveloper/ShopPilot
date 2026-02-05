@@ -13,8 +13,19 @@ import { context, Context } from './context';
 
 // Merge resolvers
 const resolvers = {
-  Query: { ...productResolvers.Query, ...storeResolvers.Query, ...authResolvers.Query, ...orderResolvers.Query },
-  Mutation: { ...productResolvers.Mutation, ...storeResolvers.Mutation, ...aiResolvers.Mutation, ...authResolvers.Mutation, ...orderResolvers.Mutation },
+  Query: {
+    ...productResolvers.Query,
+    ...storeResolvers.Query,
+    ...authResolvers.Query,
+    ...orderResolvers.Query,
+  },
+  Mutation: {
+    ...productResolvers.Mutation,
+    ...storeResolvers.Mutation,
+    ...aiResolvers.Mutation,
+    ...authResolvers.Mutation,
+    ...orderResolvers.Mutation,
+  },
   Store: storeResolvers.Store,
 };
 
