@@ -59,7 +59,9 @@ export function ProductModal({
               <Image
                 src={product.imageUrl}
                 alt={product.name}
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
               <div className="text-muted-foreground flex h-full items-center justify-center">
