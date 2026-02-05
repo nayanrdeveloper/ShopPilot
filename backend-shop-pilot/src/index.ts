@@ -1,57 +1,35 @@
-import express from 'express';
-import http from 'http';
-import cors from 'cors';
-import { json } from 'body-parser';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { typeDefs } from './schema/typeDefs';
 import { productResolvers } from './resolvers/product.resolver';
 import { storeResolvers } from './resolvers/store.resolver';
 import { aiResolvers } from './resolvers/ai.resolver';
 import { authResolvers } from './resolvers/auth.resolver';
+import { orderResolvers } from './resolvers/order.resolver';
+import { context, Context } from './context';
 
 // Merge resolvers
 const resolvers = {
-  Query: { ...productResolvers.Query, ...storeResolvers.Query },
-  Mutation: { ...productResolvers.Mutation, ...storeResolvers.Mutation, ...aiResolvers.Mutation, ...authResolvers.Mutation },
+  Query: { ...productResolvers.Query, ...storeResolvers.Query, ...authResolvers.Query, ...orderResolvers.Query },
+  Mutation: { ...productResolvers.Mutation, ...storeResolvers.Mutation, ...aiResolvers.Mutation, ...authResolvers.Mutation, ...orderResolvers.Mutation },
   Store: storeResolvers.Store,
 };
 
-interface MyContext {
-  token?: string;
-}
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-async function startApolloServer() {
-  const app = express();
-  const httpServer = http.createServer(app);
-
-  const server = new ApolloServer<MyContext>({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+async function main() {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+    context: context,
   });
 
-  await server.start();
-
-  app.use(
-    '/graphql',
-    cors<cors.CorsRequest>(),
-    json(),
-    expressMiddleware(server, {
-      context: async ({ req }) => {
-        const token = req.headers.token;
-        return { token: Array.isArray(token) ? token[0] : token };
-      },
-    }),
-  );
-
-  const PORT = 4000;
-  await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
-  console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
+  console.log(`🚀 Server ready at ${url}`);
 }
 
-startApolloServer().catch((err) => {
-  console.error('Error starting server:', err);
-});
+main();

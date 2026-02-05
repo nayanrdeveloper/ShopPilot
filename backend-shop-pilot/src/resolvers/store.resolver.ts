@@ -1,10 +1,14 @@
 import { StoreService } from '../services/store.service';
 import { ProductService } from '../services/product.service';
+import { AnalyticsService } from '../services/analytics.service';
 
 export const storeResolvers = {
   Query: {
     stores: async () => {
       return await StoreService.getAll();
+    },
+    dashboardStats: async (_: any, { storeId }: { storeId: string }) => {
+      return await AnalyticsService.getDashboardStats(storeId);
     },
     store: async (_: any, { slug }: { slug: string }) => {
       return await StoreService.getBySlug(slug);

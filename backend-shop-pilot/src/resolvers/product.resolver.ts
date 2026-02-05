@@ -3,8 +3,8 @@ import { ProductService } from '../services/product.service';
 export const productResolvers = {
   Query: {
     hello: () => 'Hello Shop Pilot!',
-    products: async (_: any, { skip, take }: { skip?: number; take?: number }) => {
-      return await ProductService.getAll(skip, take);
+    products: async (_: any, { skip, take, storeId }: { skip?: number; take?: number; storeId?: string }) => {
+      return await ProductService.getAll(skip, take, storeId);
     },
     product: async (_: any, { id }: { id: string }) => {
       return await ProductService.getById(id);

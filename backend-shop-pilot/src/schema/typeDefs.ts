@@ -23,10 +23,13 @@ export const typeDefs = `#graphql
 
   type Query {
     hello: String
-    products(skip: Int, take: Int): [Product!]!
+    products(skip: Int, take: Int, storeId: ID): [Product!]!
     store(slug: String!): Store
     stores: [Store!]!
     product(id: ID!): Product
+    me: User
+    orders(storeId: ID!, skip: Int, take: Int): [Order!]!
+    dashboardStats(storeId: ID!): DashboardStats!
   }
 
   type AuthPayload {
@@ -64,5 +67,21 @@ export const typeDefs = `#graphql
     total: Float!
     status: String!
     createdAt: String!
+    items: [OrderItem!]
+  }
+
+  type OrderItem {
+    id: ID!
+    quantity: Int!
+    price: Float!
+    product: Product!
+  }
+
+  type DashboardStats {
+    totalRevenue: Float!
+    totalOrders: Int!
+    averageOrderValue: Float!
+    lowStockCount: Int!
+    totalProducts: Int!
   }
 `;

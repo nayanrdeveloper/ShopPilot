@@ -1,69 +1,68 @@
 import prisma from '../prisma/client';
 
 export const AnalyticsService = {
-  createOrder: async (storeId: string, items: { productId: string; quantity: number }[]) => {
-    let total = 0;
-    const orderItemsData = [];
 
-    for (const item of items) {
-      const product = await prisma.product.findUnique({ where: { id: item.productId } });
-      if (!product) throw new Error(`Product ${item.productId} not found`);
+    getDashboardStats: async (storeId: string) => {
+        const orders = await prisma.order.findMany({
+            where: { storeId },
+        });
 
-      total += product.price * item.quantity;
-      orderItemsData.push({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: product.price,
-      });
-    }
+        const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+        const totalOrders = orders.length;
+        const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    return await prisma.order.create({
-      data: {
-        storeId,
-        total,
-        items: {
-          create: orderItemsData,
-        },
-      },
-      include: { items: true },
-    });
-  },
+        const lowStockCount = await prisma.product.count({
+            where: { storeId, stock: { lt: 10 } },
+        });
 
-  getSalesData: async (storeId: string) => {
-    // 1. Total Revenue
-    const orders = await prisma.order.findMany({
-      where: { storeId },
-      include: { items: { include: { product: true } } },
-    });
+        const totalProducts = await prisma.product.count({
+            where: { storeId },
+        });
 
-    const totalRevenue = orders.reduce((sum: number, order: any) => sum + order.total, 0);
-    const totalOrders = orders.length;
+        return {
+            totalRevenue,
+            totalOrders,
+            averageOrderValue,
+            lowStockCount,
+            totalProducts,
+        };
+    },
 
-    // 2. Top Selling Products
-    const productSales: Record<string, number> = {};
-    orders.forEach((order: any) => {
-      order.items.forEach((item: any) => {
-        const name = item.product.name;
-        productSales[name] = (productSales[name] || 0) + item.quantity;
-      });
-    });
+    getSalesData: async (storeId: string) => {
+        // 1. Total Revenue
+        const orders = await prisma.order.findMany({
+            where: { storeId },
+            include: { items: { include: { product: true } } },
+        });
 
-    const topSelling = Object.entries(productSales)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 3)
-      .map(([name, qty]) => `${name} (${qty} sold)`);
+        const totalRevenue = orders.reduce((sum: number, order: any) => sum + order.total, 0);
+        const totalOrders = orders.length;
 
-    // 3. Low Stock (Real-time check)
-    const lowStockProducts = await prisma.product.findMany({
-      where: { storeId, stock: { lt: 10 } },
-      select: { name: true, stock: true },
-    });
+        // 2. Top Selling Products
+        const productSales: Record<string, number> = {};
+        orders.forEach((order: any) => {
+            order.items.forEach((item: any) => {
+                const name = item.product.name;
+                productSales[name] = (productSales[name] || 0) + item.quantity;
+            });
+        });
 
-    return {
-      totalRevenue,
-      totalOrders,
-      topSelling,
-      lowStock: lowStockProducts.map((p: any) => `${p.name} (${p.stock} left)`),
-    };
-  },
+        const topSelling = Object.entries(productSales)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 3)
+            .map(([name, qty]) => `${name} (${qty} sold)`);
+
+        // 3. Low Stock (Real-time check)
+        const lowStockProducts = await prisma.product.findMany({
+            where: { storeId, stock: { lt: 10 } },
+            select: { name: true, stock: true },
+        });
+
+        return {
+            totalRevenue,
+            totalOrders,
+            topSelling,
+            lowStock: lowStockProducts.map((p: any) => `${p.name} (${p.stock} left)`),
+        };
+    },
 };

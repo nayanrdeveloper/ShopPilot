@@ -63,6 +63,7 @@ backend-shop-pilot/
     ```env
     DATABASE_URL="file:./dev.db"
     GEMINI_API_KEY="your-google-gemini-key"
+    JWT_SECRET="your-secret-key"
     ```
 
 3.  **Run Database Migrations**
@@ -143,7 +144,98 @@ query {
 
 ---
 
-### 3. Order System
+### 4. Authentication & Dashboard 🔐
+
+#### **Register (User + Store)**
+Creates a new User and a new Store simultaneously.
+**Mutation:**
+```graphql
+mutation {
+  register(
+    email: "owner@example.com", 
+    password: "securepass", 
+    name: "John Doe", 
+    storeName: "John's Tech"
+  ) {
+    token
+    user { email }
+    store { id slug }
+  }
+}
+```
+
+#### **Login**
+Returns a JWT token for authentication.
+**Mutation:**
+```graphql
+mutation {
+  login(email: "owner@example.com", password: "securepass") {
+    token
+  }
+}
+```
+
+#### **Get Current User (Me)**
+Requires `Authorization: Bearer <token>` header.
+**Query:**
+```graphql
+query {
+  me {
+    id
+    email
+    name
+  }
+}
+```
+
+#### **Fetch Store Products (Filtered)**
+Fetch products only for a specific store.
+**Query:**
+```graphql
+query {
+  products(storeId: "STORE_UUID", take: 10) {
+    name
+    price
+    active
+  }
+}
+```
+
+#### **Fetch Dashboard Statistics**
+Returns raw numbers for charts (Revenue, Orders, Low Stock).
+**Query:**
+```graphql
+query {
+  dashboardStats(storeId: "STORE_UUID") {
+    totalRevenue
+    totalOrders
+    averageOrderValue
+    lowStockCount
+    totalProducts
+  }
+}
+```
+
+---
+
+### 5. Order System
+
+#### **List Orders**
+**Query:**
+```graphql
+query {
+  orders(storeId: "STORE_UUID", take: 10) {
+    id
+    total
+    status
+    createdAt
+    items {
+      product { name }
+      quantity
+    }
+  }
+}
+```
 
 #### **Create Order**
 **Mutation:**
@@ -162,9 +254,7 @@ mutation {
 }
 ```
 
----
-
-### 4. AI Features 🤖
+### 6. AI Features 🤖
 
 #### **Generate Product Description**
 Uses Gemini AI to write a marketing description.
@@ -199,3 +289,4 @@ mutation {
   }
 }
 ```
+
