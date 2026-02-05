@@ -1,0 +1,29 @@
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Build outputs
+dist/
+build/
+
+# Database
+prisma/dev.db
+prisma/*.db-journal
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+gemini_error.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cobertura coverage
+coverage/
+TRASH/
