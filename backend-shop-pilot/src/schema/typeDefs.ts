@@ -7,6 +7,13 @@ export const typeDefs = `#graphql
     template: String
     heroImage: String
     primaryColor: String
+    seoTitle: String
+    seoDescription: String
+    seoKeywords: String
+    twitter: String
+    instagram: String
+    facebook: String
+    linkedin: String
     products: [Product!]
     createdAt: String!
   }
@@ -78,6 +85,13 @@ export const typeDefs = `#graphql
     template: String
     heroImage: String
     primaryColor: String
+    seoTitle: String
+    seoDescription: String
+    seoKeywords: String
+    twitter: String
+    instagram: String
+    facebook: String
+    linkedin: String
   }
 
   input OrderItemInput {

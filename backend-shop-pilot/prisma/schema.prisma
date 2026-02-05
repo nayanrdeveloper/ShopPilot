@@ -19,6 +19,13 @@ model Store {
   template  String    @default("classic")
   heroImage String?
   primaryColor String?
+  seoTitle String?
+  seoDescription String?
+  seoKeywords String?
+  twitter     String?
+  instagram   String?
+  facebook    String?
+  linkedin    String?
   products  Product[]
   users     User[]
   orders    Order[]

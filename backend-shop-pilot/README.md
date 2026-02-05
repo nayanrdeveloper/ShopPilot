@@ -105,6 +105,13 @@ query {
     template
     primaryColor
     heroImage
+    seoTitle
+    seoDescription
+    seoKeywords
+    twitter
+    instagram
+    facebook
+    linkedin
     products {
       name
       price
@@ -122,12 +129,21 @@ mutation {
     input: {
       about: "We sell the best tech gadgets.",
       template: "modern",
-      primaryColor: "#0070f3"
+      primaryColor: "#0070f3",
+      seoTitle: "Tech Store | Best Gadgets Online",
+      seoDescription: "Shop the latest phones and laptops at unbeatable prices.",
+      seoKeywords: "electronics, gadgets, phones",
+      twitter: "https://twitter.com/mytechstore",
+      instagram: "@mytechstore",
+      facebook: "https://facebook.com/mytechstore",
+      linkedin: "https://linkedin.com/company/mytechstore"
     }
   ) {
     name
     about
     template
+    seoTitle
+    twitter
   }
 }
 ```
