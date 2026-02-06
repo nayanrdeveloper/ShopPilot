@@ -4,7 +4,7 @@ export const OrderService = {
   createOrder: async (
     storeId: string,
     items: { productId: string; quantity: number }[],
-    customerDetails: { name: string; email: string; address: string }
+    customerDetails: { name: string; email: string; address: string },
   ) => {
     let total = 0;
     const orderItemsData = [];
