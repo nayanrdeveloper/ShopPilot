@@ -1,7 +1,11 @@
 import prisma from '../prisma/client';
 
 export const OrderService = {
-  createOrder: async (storeId: string, items: { productId: string; quantity: number }[]) => {
+  createOrder: async (
+    storeId: string,
+    items: { productId: string; quantity: number }[],
+    customerDetails: { name: string; email: string; address: string }
+  ) => {
     let total = 0;
     const orderItemsData = [];
 
@@ -21,6 +25,9 @@ export const OrderService = {
       data: {
         storeId,
         total,
+        customerName: customerDetails.name,
+        customerEmail: customerDetails.email,
+        shippingAddress: customerDetails.address,
         items: {
           create: orderItemsData,
         },
@@ -42,6 +49,14 @@ export const OrderService = {
           },
         },
       },
+    });
+  },
+
+  updateStatus: async (orderId: string, status: string) => {
+    return await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+      include: { items: true },
     });
   },
 };

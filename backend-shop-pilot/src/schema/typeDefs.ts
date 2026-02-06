@@ -69,7 +69,8 @@ export const typeDefs = `#graphql
     createProduct(name: String!, price: Float!, sku: String!, storeId: String!, stock: Int, description: String, imageUrl: String): Product!
     updateProduct(id: ID!, name: String, price: Float, stock: Int, description: String, imageUrl: String, active: Boolean): Product!
     generateDescription(name: String!, category: String!): String!
-    createOrder(storeId: ID!, items: [OrderItemInput!]!): Order!
+    createOrder(storeId: ID!, items: [OrderItemInput!]!, customerName: String!, customerEmail: String!, shippingAddress: String!): Order!
+    updateOrderStatus(id: ID!, status: String!): Order!
     generateSalesSummary(storeId: ID!): String!
     
     register(email: String!, password: String!, name: String!, storeName: String!): AuthPayload!
@@ -103,6 +104,9 @@ export const typeDefs = `#graphql
     id: ID!
     total: Float!
     status: String!
+    customerName: String
+    customerEmail: String
+    shippingAddress: String
     createdAt: String!
     items: [OrderItem!]
   }

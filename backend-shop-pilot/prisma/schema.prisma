@@ -65,8 +65,11 @@ model Order {
   id        String      @id @default(uuid())
   storeId   String
   store     Store       @relation(fields: [storeId], references: [id])
-  total     Float
-  status    String      @default("COMPLETED")
+  total           Float
+  status          String      @default("PENDING")
+  customerName    String?
+  customerEmail   String?
+  shippingAddress String?
   items     OrderItem[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt

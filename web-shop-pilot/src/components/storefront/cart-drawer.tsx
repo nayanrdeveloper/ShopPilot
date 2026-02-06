@@ -9,6 +9,7 @@ import { useCartStore } from '@/lib/cart-store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { useParams, useRouter } from 'next/navigation';
 
 interface CartDrawerProps {
   primaryColor?: string;
@@ -17,6 +18,9 @@ interface CartDrawerProps {
 export function CartDrawer({ primaryColor = '#000000' }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, isOpen, toggleCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const params = useParams();
+  const slug = params?.slug as string;
 
   useEffect(() => {
     setMounted(true);
@@ -63,7 +67,7 @@ export function CartDrawer({ primaryColor = '#000000' }: CartDrawerProps) {
                     exit={{ opacity: 0, height: 0, scale: 0.9 }}
                     className="flex items-start gap-4 bg-white"
                   >
-                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border bg-gray-100">
+                    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border bg-gray-100">
                       {item.imageUrl ? (
                         <Image
                           src={item.imageUrl}
@@ -132,6 +136,10 @@ export function CartDrawer({ primaryColor = '#000000' }: CartDrawerProps) {
             <Button
               className="h-12 w-full rounded-xl text-lg shadow-lg transition-opacity hover:opacity-90"
               style={{ backgroundColor: primaryColor }}
+              onClick={() => {
+                toggleCart(false);
+                router.push(`/${slug}/checkout`);
+              }}
             >
               Checkout Now
             </Button>
