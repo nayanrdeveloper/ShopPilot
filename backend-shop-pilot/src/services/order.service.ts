@@ -59,4 +59,45 @@ export const OrderService = {
       include: { items: true },
     });
   },
+
+  getSalesChartData: async (storeId: string) => {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const orders = await prisma.order.findMany({
+      where: {
+        storeId,
+        createdAt: {
+          gte: sevenDaysAgo,
+        },
+        status: {
+          not: 'CANCELLED',
+        },
+      },
+      select: {
+        createdAt: true,
+        total: true,
+      },
+    });
+
+    const salesByDate: Record<string, { date: string; revenue: number; orders: number }> = {};
+
+    // Initialize last 7 days with 0
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0]; // YYYY-MM-DD
+      salesByDate[dateStr] = { date: dateStr, revenue: 0, orders: 0 };
+    }
+
+    orders.forEach((order) => {
+      const dateStr = order.createdAt.toISOString().split('T')[0];
+      if (salesByDate[dateStr]) {
+        salesByDate[dateStr].revenue += order.total;
+        salesByDate[dateStr].orders += 1;
+      }
+    });
+
+    return Object.values(salesByDate).sort((a, b) => a.date.localeCompare(b.date));
+  },
 };

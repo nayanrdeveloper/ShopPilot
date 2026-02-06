@@ -7,6 +7,7 @@ import { DollarSign, ShoppingBag, Package, TrendingUp, AlertCircle } from 'lucid
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { SalesAreaChart } from '@/components/dashboard/sales-area-chart';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats($storeId: ID!) {
@@ -139,16 +140,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <div className="text-muted-foreground bg-muted/20 flex h-[200px] items-center justify-center rounded-md border-2 border-dashed">
-              Chart Component Placeholder
-            </div>
-          </CardContent>
-        </Card>
+        <SalesAreaChart />
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>

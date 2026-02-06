@@ -42,6 +42,7 @@ export const typeDefs = `#graphql
     orders(storeId: ID!, skip: Int, take: Int): [Order!]!
     dashboardStats(storeId: ID!): DashboardStats!
     getUploadSignature: CloudinarySignature!
+    salesChartData(storeId: ID!): [SalesChartData!]!
   }
 
   type CloudinarySignature {
@@ -124,5 +125,11 @@ export const typeDefs = `#graphql
     averageOrderValue: Float!
     lowStockCount: Int!
     totalProducts: Int!
+  }
+
+  type SalesChartData {
+    date: String!
+    revenue: Float!
+    orders: Int!
   }
 `;

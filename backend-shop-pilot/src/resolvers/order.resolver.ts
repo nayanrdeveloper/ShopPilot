@@ -8,6 +8,9 @@ export const orderResolvers = {
     ) => {
       return await OrderService.getAll(storeId, skip, take);
     },
+    salesChartData: async (_: any, { storeId }: { storeId: string }) => {
+      return await OrderService.getSalesChartData(storeId);
+    },
   },
   Mutation: {
     createOrder: async (
