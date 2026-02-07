@@ -13,7 +13,8 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { useAuthStore } from '@/lib/store';
 
 export default function LandingPage() {
   const containerRef = useRef(null);
@@ -21,6 +22,13 @@ export default function LandingPage() {
     target: containerRef,
     offset: ['start start', 'end end'],
   });
+
+  const user = useAuthStore((state) => state.user);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
 
@@ -56,19 +64,29 @@ export default function LandingPage() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4"
           >
-            <Link href="/login">
-              <Button
-                variant="ghost"
-                className="hover:bg-purple-500/10 hover:text-purple-600 dark:hover:text-purple-400"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button className="border-0 bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg shadow-purple-500/25 transition-all hover:scale-105 hover:shadow-purple-500/40">
-                Get Started
-              </Button>
-            </Link>
+            {mounted && user ? (
+              <Link href="/dashboard">
+                <Button className="border-0 bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg shadow-purple-500/25 transition-all hover:scale-105 hover:shadow-purple-500/40">
+                  Go to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button
+                    variant="ghost"
+                    className="hover:bg-purple-500/10 hover:text-purple-600 dark:hover:text-purple-400"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button className="border-0 bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg shadow-purple-500/25 transition-all hover:scale-105 hover:shadow-purple-500/40">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </motion.div>
         </div>
       </header>

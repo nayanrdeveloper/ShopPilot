@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ const sidebarItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const logout = useAuthStore((state) => state.logout);
+  const store = useAuthStore((state) => state.store);
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -84,6 +86,23 @@ export function Sidebar() {
           );
         })}
       </nav>
+
+      {/* Launch Store Button */}
+      {store?.slug && (
+        <div className={cn('px-3 py-2', collapsed && 'p-2')}>
+          <Link
+            href={`/${store.slug}`}
+            target="_blank"
+            className={cn(
+              'group flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2.5 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-900/30 dark:bg-purple-900/10 dark:text-purple-300 dark:hover:bg-purple-900/20',
+              collapsed && 'justify-center px-0'
+            )}
+          >
+            <ExternalLink className="h-5 w-5" />
+            {!collapsed && <span>Launch Store</span>}
+          </Link>
+        </div>
+      )}
 
       {/* Footer / Logout */}
       <div className="border-t p-3">
